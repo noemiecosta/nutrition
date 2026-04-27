@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="NutriGlow" />
+  <meta name="theme-color" content="#2D4A22" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="assets/icon-192.png" />
+  <title>NutriGlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="header-inner">
+        <div class="logo">
+          <span class="logo-leaf">🌿</span>
+          <span class="logo-text">NutriGlow</span>
+        </div>
+        <div class="header-stats">
+          <span class="stat-pill" id="today-kcal">— kcal aujourd'hui</span>
+        </div>
+      </div>
+    </header>
+
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-page="dashboard"><span class="nav-icon">🏠</span><span class="nav-label">Accueil</span></button>
+      <button class="nav-btn" data-page="programme"><span class="nav-icon">🥗</span><span class="nav-label">Programme</span></button>
+      <button class="nav-btn" data-page="journal"><span class="nav-icon">📝</span><span class="nav-label">Journal</span></button>
+      <button class="nav-btn" data-page="courses"><span class="nav-icon">🛒</span><span class="nav-label">Courses</span></button>
+    </nav>
+
+    <main class="page-container">
+
+      <!-- DASHBOARD -->
+      <section class="page active" id="page-dashboard">
+        <div class="page-scroll">
+          <div class="greeting-block">
+            <h1 class="greeting-title">Bonjour, Noémie <span class="wave">👋</span></h1>
+            <p class="greeting-sub" id="today-date"></p>
+          </div>
+          <div class="macro-card">
+            <div class="macro-ring-wrap">
+              <svg class="macro-ring" viewBox="0 0 120 120">
+                <circle class="ring-bg" cx="60" cy="60" r="50"/>
+                <circle class="ring-fill" cx="60" cy="60" r="50" id="ring-fill-el"/>
+              </svg>
+              <div class="ring-center">
+                <span class="ring-num" id="ring-consumed">0</span>
+                <span class="ring-label">/ 1650 kcal</span>
+              </div>
+            </div>
+            <div class="macro-details">
+              <div class="macro-item"><span class="m-dot" style="background:#C4A882"></span><span class="m-name">Protéines</span><span class="m-val" id="dash-prot">0 / 120g</span></div>
+              <div class="macro-item"><span class="m-dot" style="background:#8BAF6E"></span><span class="m-name">Glucides</span><span class="m-val" id="dash-gluc">0 / 160g</span></div>
+              <div class="macro-item"><span class="m-dot" style="background:#A8D8C8"></span><span class="m-name">Lipides</span><span class="m-val" id="dash-lip">0 / 55g</span></div>
+              <div class="macro-item" style="margin-top:0.25rem;padding-top:0.25rem;border-top:1px solid rgba(255,255,255,0.15)">
+                <span class="m-dot" style="background:#E8C547"></span><span class="m-name">Restant</span><span class="m-val" id="dash-reste">1650 kcal</span>
+              </div>
+            </div>
+          </div>
+          <div class="section-header">
+            <h2 class="section-title">Repas suggérés aujourd'hui</h2>
+            <span class="section-day" id="day-label"></span>
+          </div>
+          <div id="meals-today-container"></div>
+          <div class="hydration-card">
+            <div class="hydra-header"><span>💧 Hydratation</span><span id="hydra-count">0 / 8 verres</span></div>
+            <div class="hydra-glasses" id="hydra-glasses"></div>
+          </div>
+          <div class="tip-card" id="tip-card"></div>
+        </div>
+      </section>
+
+      <!-- PROGRAMME -->
+      <section class="page" id="page-programme">
+        <div class="page-scroll">
+          <div class="page-title-block">
+            <h2 class="page-title">Mon programme</h2>
+            <p class="page-sub">Appuie sur un aliment 🔄 pour le remplacer</p>
+          </div>
+          <div class="macros-target-grid">
+            <div class="mt-card mt-kcal"><span class="mt-num">1 650</span><span class="mt-unit">kcal</span></div>
+            <div class="mt-card mt-prot"><span class="mt-num">120g</span><span class="mt-unit">Protéines</span></div>
+            <div class="mt-card mt-gluc"><span class="mt-num">160g</span><span class="mt-unit">Glucides</span></div>
+            <div class="mt-card mt-lip"><span class="mt-num">55g</span><span class="mt-unit">Lipides</span></div>
+          </div>
+          <div class="day-tabs" id="day-tabs"></div>
+          <div id="day-programme"></div>
+        </div>
+      </section>
+
+      <!-- JOURNAL -->
+      <section class="page" id="page-journal">
+        <div class="page-scroll">
+          <div class="page-title-block">
+            <h2 class="page-title">Journal alimentaire</h2>
+            <p class="page-sub">Recherche un aliment · entre le poids · c'est tout !</p>
+          </div>
+
+          <div class="log-add-card">
+            <!-- Étape 1 : recherche -->
+            <div id="log-step-1">
+              <select class="log-select" id="log-repas">
+                <option value="petit-dej">☀️ Petit-déjeuner</option>
+                <option value="dejeuner">🥗 Déjeuner</option>
+                <option value="snack">🍎 Collation</option>
+                <option value="diner">🌙 Dîner</option>
+              </select>
+              <div class="search-wrap">
+                <input class="log-input" id="log-search" type="text" placeholder="🔍 Ex: pain, yaourt, poulet…" autocomplete="off" />
+                <div class="search-results hidden" id="search-results"></div>
+              </div>
+              <p class="search-hint">Choisis dans la liste ou tape manuellement ci-dessous</p>
+              <button class="btn-ghost-small" id="manual-mode-btn">Entrer sans référence →</button>
+            </div>
+
+            <!-- Étape 2 : aliment sélectionné -->
+            <div class="hidden" id="log-step-2">
+              <div class="selected-food-banner" id="selected-food-banner"></div>
+              <div class="ref-macros-row" id="ref-macros-row"></div>
+
+              <div class="log-weight-row">
+                <input class="log-input" id="log-weight" type="number" placeholder="Quantité en grammes (ex: 80)" min="1" />
+                <span class="log-weight-unit">g</span>
+              </div>
+
+              <div class="calc-result hidden" id="calc-result">
+                <div class="calc-line"><span class="calc-big" id="calc-kcal">0 kcal</span></div>
+                <div class="calc-macros-row" id="calc-macros"></div>
+              </div>
+
+              <div class="log-step-btns">
+                <button class="btn-ghost" id="log-back-btn">← Retour</button>
+                <button class="btn-primary" id="log-add-btn">Ajouter ✓</button>
+              </div>
+            </div>
+
+            <!-- Mode manuel direct -->
+            <div class="hidden" id="log-step-manual">
+              <p class="manual-label">Saisie manuelle</p>
+              <input class="log-input" id="manual-name" type="text" placeholder="Nom de l'aliment" />
+              <div class="log-macros-row">
+                <input class="log-input log-mini" id="manual-kcal" type="number" placeholder="kcal" />
+                <input class="log-input log-mini" id="manual-prot" type="number" placeholder="P(g)" />
+                <input class="log-input log-mini" id="manual-gluc" type="number" placeholder="G(g)" />
+                <input class="log-input log-mini" id="manual-lip" type="number" placeholder="L(g)" />
+              </div>
+              <div class="log-step-btns">
+                <button class="btn-ghost" id="manual-back-btn">← Retour</button>
+                <button class="btn-primary" id="manual-add-btn">Ajouter ✓</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="log-entries-header">
+            <span class="section-title" style="font-size:1rem">Aujourd'hui</span>
+            <span class="log-total-badge" id="log-total-badge">0 kcal</span>
+          </div>
+          <div class="log-entries" id="log-entries"></div>
+
+          <div class="section-header" style="margin-top:1.25rem">
+            <h2 class="section-title">Cette semaine</h2>
+          </div>
+          <div class="week-bilan" id="week-bilan"></div>
+        </div>
+      </section>
+
+      <!-- COURSES -->
+      <section class="page" id="page-courses">
+        <div class="page-scroll">
+          <div class="page-title-block">
+            <h2 class="page-title">Liste de courses</h2>
+            <p class="page-sub">Pour 1 semaine · coche au fur et à mesure</p>
+          </div>
+          <div class="courses-filter" id="courses-filter"></div>
+          <div class="courses-list" id="courses-list"></div>
+          <button class="btn-secondary" id="reset-courses-btn">Réinitialiser les cases</button>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL SWAP -->
+  <div class="modal-overlay hidden" id="swap-modal">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <h3 class="modal-title">Remplacer cet aliment</h3>
+      <div class="modal-current" id="swap-modal-current"></div>
+      <p class="modal-subtitle">Choisis un équivalent :</p>
+      <div class="swap-list" id="swap-list"></div>
+      <button class="btn-ghost modal-close-btn" id="swap-modal-close">Annuler</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});</script>
+</body>
+</html>
